@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -52,6 +53,17 @@ var devices = []Device{
 		CpuUsage:     "82%",
 		CpuWarnThres: "Yes",
 	},
+
+	{
+		Name:         "Device 4",
+		Status:       "Online",
+		TotalMemory:  "8192MB",
+		MemoryUsage:  "98%",
+		MemWarnThres: "Yes",
+		CpuCount:     "8",
+		CpuUsage:     "89%",
+		CpuWarnThres: "Yes",
+	},
 }
 
 func getDevices(c *gin.Context) {
@@ -61,7 +73,14 @@ func getDevices(c *gin.Context) {
 func main() {
 	router := gin.Default()
 	// handle cross-origin res sharing, not really necessary for a localhost app but
-	router.Use(cors.Default())
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"}, // Frontend port
+		AllowMethods:     []string{"GET"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 	router.GET("/devices", getDevices)
 
 	router.Run("localhost:8080")
