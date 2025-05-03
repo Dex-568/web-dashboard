@@ -11,8 +11,6 @@ interface Device {
 }
 
 class DeviceTable {
-
-    
     table: HTMLTableElement
     tbody: HTMLTableSectionElement
 
